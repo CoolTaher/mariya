@@ -1,0 +1,82 @@
+PRACTICAL NO.9 
+Aim: Supervised Learning Algorithm
+
+1] Linear Regression Algorithm
+CODE:
+import numpy as np
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+#X values:Area in sq ft
+X = np.array([[500], [750], [1000], [1250],[1500],[1750],[2000]])
+#Y values: Price in $100s
+y = np.array([150,200,250,275,300,325,350])
+#model
+model = LinearRegression()
+#Train
+model.fit(X,y)
+#Prediction
+y_pred = model.predict(X)
+#Predict for a new data
+new_area = np.array([[1800]])
+predicted_price = model.predict(new_area)
+print(f"Predicted price for 1800 sq ft: ${predicted_price[0]:.2f}K")
+#Plot original data and prediction line
+plt.scatter(X,y,color='green',label='Actual Prices')
+plt.plot(X, y_pred,color='red',label='Prediction Line')
+plt.scatter(new_area, predicted_price, color='blue', label='New Prediction for 1800 sq ft)',marker='x', s=100)
+plt.xlabel("Area (sq ft)")
+plt.ylabel("Price ($1000s)")
+plt.title("House Price Prediction using Linear Regression")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+2] Classification Algorithm - KNN
+CODE:
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
+from sklearn.metrics import confusion_matrix
+import seaborn as sn
+import matplotlib.pyplot as plt
+
+iris=load_iris()
+print(iris.feature_names)
+x=iris.data
+y=iris.target
+
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.3,random_state=1)
+
+knn=KNeighborsClassifier(n_neighbors=10)
+
+train=knn.fit(x_train,y_train)
+
+print("Target Names are:",iris.target_names)
+print("Values for Target class:",iris.target)
+print("Size of the Train data:",len(x_train))
+print("Size for Test data:",len(x_test))
+print(x_test)
+print(y_test)
+
+print("Predicted classes for the above testing Data:")
+
+y_pred=train.predict(x_test)
+print(y_pred)
+
+print("Accuracy of the model:")
+print(knn.score(x_test,y_test))
+
+print("Confusion matrix of model")
+cm=confusion_matrix(y_test,y_pred)
+print(cm)
+
+plt.figure(figsize=(7,5))
+sn.heatmap(cm,annot=True)
+plt.xlabel('Predicted')
+plt.ylabel('Truth')
+plt.show()
+
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
