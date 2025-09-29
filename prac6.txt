@@ -1,0 +1,45 @@
+Practical No.06 
+Aim: Connect Nodejs with MongoDB 
+Server.js 
+Code: 
+const http = require('http'); 
+const mongo = require('mongoose'); 
+const PORT = 5003; 
+const express = require('express'); 
+const app = new express(); 
+mongo.connect('mongodb://localhost:27017/prac_mern_6') 
+    .then((conn) => { 
+        console.log('DB conn successful'); 
+    }) 
+    .catch((err) => { 
+        console.log('Error'); 
+    }); 
+const moviescheme = new mongo.Schema({ 
+    name: { 
+        type: String, 
+        require: [true, 'Name is required!'], 
+    }, 
+    description: String, 
+    duration: Number, 
+    rating: { 
+        type: Number, 
+        default: 1.0 
+    } 
+}); 
+const Movie_model = mongo.model('MovieModel', moviescheme); 
+const test_movie = new Movie_model({ 
+    name: 'Movie added', 
+    description: 'Action movie',
+    duration: 160, 
+    rating: 4.5 
+}); 
+test_movie.save() 
+   .then(doc => { 
+        console.log(doc); 
+    }) 
+    .catch((err) => { 
+        console.log('Error occured!' + err); 
+    }); 
+    app.listen(PORT,()=>{ 
+        console.log('server running...${PORT}'); 
+    })

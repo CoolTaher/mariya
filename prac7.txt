@@ -1,0 +1,173 @@
+PRACTICAL NO :-7 
+AIM: Hooks in functional component & lifecycle methods of class component 
+Q1 create counter using useState Hook 
+Code  
+Count1.js 
+import React,{useState} from "react"; 
+const Count1=()=>{ 
+    const[count,setCount]=useState(0); 
+    return( 
+        <div> 
+            <p> 
+                You Clicked {count} times 
+            </p> 
+            <button onClick={()=>setCount(count+1)}>Click me</button> 
+        </div> 
+    ); 
+} 
+export default Count1</button> 
+App.js  
+import Count1 from "./Count1"; 
+import './App.css'; 
+function App(){ 
+return( 
+    <div className="App"> 
+      <Count1/> 
+    </div> 
+  ); 
+} 
+export default App; 
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Q2 Perform increment, decrement and reset operations using useReducer Hook  
+Code: 
+Incdec_reset.js 
+import { useReducer } from "react"; 
+const initialState = 0; 
+const reducer=(state,action)=>{ 
+    switch(action){ 
+        case "add": 
+            return state + 1; 
+        case "subtract": 
+            return state -1; 
+        case "reset": 
+            return 0; 
+        default: 
+            throw new Error("Error"); 
+    } 
+}; const Arithmetic =() => { 
+    const[count,dispatch] =useReducer(reducer,initialState); 
+    return( 
+        <div> 
+            <h2>{count}</h2> 
+            <button onClick={() => dispatch("add")}> Increment</button> 
+
+<button onClick={() => dispatch("subtract")}> decrement</button> 
+            <button onClick={() => dispatch("reset")}> reset</button> 
+            </div> 
+    ); 
+} 
+export default Arithmetic; 
+App.js 
+import Arithmetic from './Incdec_reset'; 
+import './App.css'; 
+function App(){ 
+return( 
+    <div className="App"> 
+      <Arithmetic/> 
+    </div> 
+  ); 
+} 
+export default App;
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Q3 mount and updating 
+Code: 
+Header.js 
+import React,{Component} from "react"; 
+class Header extends React.Component{ 
+    constructor(props){ 
+        super(props); 
+        this.state={favoritecolor:"red"}; 
+    } 
+    componentDidMount(){ 
+        setTimeout(()=>{ 
+            this.setState({favoritecolor:"yellow"}) 
+        },5000) 
+         
+    } 
+    getSnapshotBeforeUpdate(prevProps, prevState){ 
+        document.getElementById("div1").innerHTML="Before the update,the favorite was"+ 
+prevState.favoritecolor; 
+    } 
+    componentDidUpdate(){ 
+        document.getElementById("div2").innerHTML="The updated favorite 
+is"+this.state.favoritecolor; 
+    }  
+    render(){ 
+        return( 
+            <div> 
+            <h1>My Favorite Color is {this.state.favoritecolor}</h1> 
+            <div id="div1"></div> 
+            <div id="div2"></div> 
+            </div> 
+            
+        ) 
+    } 
+    } 
+export default Header; 
+App.js 
+import Header from './Header'; 
+import './App.css'; 
+function App(){ 
+return( 
+    <div className="App"> 
+      <Header/> 
+    </div> 
+  ); 
+} 
+export default App;
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Q4. Unmount 
+Code: 
+Unmount.js 
+import React from "react"; 
+class Unmount extends React.Component{ 
+    constructor(){ 
+super(); 
+        this.state={ 
+            delete:false, 
+        }; 
+    } 
+    render(){ 
+        return( 
+            <div>  
+                <h1>User List</h1> 
+                <button onClick={()=>this.setState({delete:!this.state.delete})}>Delete 
+Users</button> 
+                {this.state.delete?null:<User/>} 
+            </div> 
+        ) 
+    } 
+} 
+class User extends React.Component{ 
+    componentWillUnmount(){ 
+        alert("Delete user successfully!!"); 
+    } 
+    render(){ 
+        return( 
+            <div> 
+                <h3>UserName:Rahul</h3> 
+                <h3>Email:Rahul@gmail.com</h3> 
+            </div> 
+        ) 
+    } 
+} 
+export default Unmount 
+App.js 
+import Unmount from './Unmount'; 
+import './App.css'; 
+function App(){ 
+return( 
+    <div className="App"> 
+      <Unmount/> 
+    </div> 
+  ); 
+} 
+export default App;
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX   

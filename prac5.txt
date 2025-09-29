@@ -1,0 +1,58 @@
+Practical No. 5
+Aim: Creating server using express and handling HTTP methods. 
+user.json
+ 
+Q.1) Get details of the user whose id is 2.
+Code:
+get.js:
+const fs = require('fs');
+const port = 8000;
+const express = require('express');
+const app = express();
+let users = JSON.parse(fs.readFileSync('./User.json'));
+app.get('/api/vl/users', (req, res)=>{
+    res.json(users);
+});
+app.get('/api/vl/users/:id', (req, res)=>{
+    let id = req.params.id*1;
+    const find_user = users.find(el => el.id == id)
+    res.status(200).json(find_user)
+    if(!find_user){
+        return res.status(404).json({
+            "status":"FAILED",
+            "message":"Could not find the user"
+        })
+    }
+    res.status(200).json(find_user)
+});
+app.listen(port, ()=>{
+    console.log('Server running...')
+});
+Output:
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Q.2) Update the name of the user whose id is 2 (Using patch method)
+Code:
+const fs = require('fs');
+const port = 8000;
+const express = require('express');
+const app = express();
+let users = JSON.parse(fs.readFileSync('./User.json'));
+app.get('/api/vl/users', (req, res)=>{
+    res.json(users);
+});
+app.patch('/api/vl/users/:id', (req, res)=>{
+    const user = JSON.parse(fs.readFileSync('User.json'));
+    const updatedUsers = UserActivation.map(users=>{
+        if(users.id ===2){
+            users.name = 'Ram';
+        }
+        return users;
+    });
+    fs.writeFileSync('User.json',JSON.stringify(updatedUsers, null, 2));
+    res.json({message: 'User with id 2 updated successfully'});
+});
+app.listen(port, ()=>{
+    console.log('Server Running')
+});
+Output:
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

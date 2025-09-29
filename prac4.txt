@@ -1,0 +1,21 @@
+PRACTICAL NO. 4 
+Aim: Creating and Publishing your own Node Module  
+Code: 
+Server.js  
+const http=require('http'); const 
+hostname='127.0.0.1'; const port=4000;  
+const server=http.createServer((req,res)=>{     
+res.writeHead(200,{'Content-Type':'text/plain'});  
+    if (req.url==='/hello'){  
+        res.end('hello world!\n');  
+    }  
+    else if (req.url==='/about'){  
+        res.end('this is the about page.\n');  
+    }     
+else{  
+        res.end('Node.js server!\n');  
+    } });  
+server.listen(port,hostname,()=>{  
+    console.log("Server runnuing at http://${hostname}:${port}/"); }); 
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
