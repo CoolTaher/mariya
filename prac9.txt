@@ -1,0 +1,197 @@
+Practical No 9  
+1. Perform ToH using Sign Test 
+from scipy.stats import binom, norm 
+from numbers import Number 
+def input_data(n=None, dtype=float): 
+    data = [] 
+    i = 0 
+    while True: 
+        if i==n: return data 
+        inp = input(f'Enter element {i+1}: ') 
+        if not inp and n is None: return data 
+        data.append(dtype(inp)) 
+        i += 1 
+ 
+def signtest(data1, data2, alternative='two-sided'): 
+    data2 = [data2]*len(data1) if isinstance(data2, Number) else data2 
+    Np = Nn = 0 
+    for obs1, obs2 in zip(data1, data2, strict=True): 
+        if obs1-obs2<0: Nn += 1 
+        elif obs1-obs2>0: Np += 1 
+     
+    m = Np+Nn 
+    dist = norm(m/2, m**(1/2)/2) if m>25 else binom(m, 0.5) 
+    if alternative=='two-sided': 
+        return (S:=min(Nn, Np)), 2*dist.cdf(S), m 
+    elif alternative=='greater': 
+        return Nn, dist.cdf(Nn), m 
+    elif alternative=='less': 
+        return Np, dist.cdf(Np), m 
+    else: 
+        raise ValueError("alternative must be 'less', 'greater' or 'two-sided'") 
+ 
+print('Sample 1:') 
+data1 = input_data() 
+print(len(data1)) 
+if input('Population median or second set of observations?: ')=='med': 
+    data2 = float(input('Enter the population median: ')) 
+else: 
+    data2 = input_data(len(data1)) 
+alt = alt if (alt:=input('Enter the type of test: ')) else 'two-sided' 
+alpha = float(input('Enter the value of alpha:'))  
+results = signtest(data1, data2, alternative=alt) 
+print(results) 
+p_value = results[1]  
+ 
+if p_value < alpha:  
+ print("H0 is rejected")  
+else: 
+       print("H0 is accepted") 
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+2. Perform ToH using Mann Whitney Test 
+from scipy.stats import norm, mannwhitneyu 
+ 
+def input_data(n=None, dtype=float): 
+    data = [] 
+    i = 0 
+    while True: 
+        if i==n: return data 
+        inp = input(f'Enter element {i+1}: ') 
+        if not inp and n is None: return data 
+        data.append(dtype(inp)) 
+        i += 1 
+ 
+def utest(data1, data2, alternative='two-sided'): 
+    data1 = [(elem, 1) for elem in data1] 
+    data2 = [(elem, 2) for elem in data2] 
+    sorted_samples = sorted(data1+data2, key=lambda tup: tup[0]) + [(0, float('inf'))] 
+     
+    R1 = R2 = 0 
+    prev = sorted_samples[0][0] 
+    accum_ranks = [] 
+    accum_nums = [] 
+    for i, (elem, samp_num) in enumerate(sorted_samples, start=1): 
+        if elem==prev: 
+            accum_ranks.append(i) 
+            accum_nums.append(samp_num) 
+        else: 
+            rank = sum(accum_ranks)/len(accum_ranks) 
+            for k in accum_nums: 
+                if k==1: R1 += rank 
+                else: R2 += rank 
+            accum_ranks = [i] 
+            accum_nums = [samp_num] 
+        prev = elem 
+     
+    n1, n2 = len(data1), len(data2) 
+    U1, U2 = R1-(n1*(n1+1)/2), R2-(n2*(n2+1)/2) 
+    dist = norm(n1*n2/2, (n1*n2*(n1+n2+1)/12)**(1/2)) 
+    if alternative=='two-sided': 
+        return (U:=min(U1, U2)), 2*dist.cdf(U) 
+    elif alternative=='greater': 
+        return U2, dist.cdf(U2) 
+    elif alternative=='less': 
+        return U1, dist.cdf(U1) 
+    else: 
+        raise ValueError("alternative must be 'less', 'greater' or 'two-sided'") 
+ 
+print('Sample 1:') 
+data1 = input_data() 
+print('Sample 2:') 
+data2 = input_data() 
+alt = alt if (alt:=input('Enter the type of test: ')) else 'two-sided' 
+alpha = float(input('Enter the value of alpha:')) 
+ 
+results = utest(data1, data2, alternative=alt) 
+print(results) 
+ 
+p_value = results[1]  
+ 
+if p_value < alpha:  
+ print("H0 is rejected")  
+else: 
+ print("H0 is accepted")  
+ 
+ 
+results = mannwhitneyu(data1, data2, alternative=alt) 
+print(results)
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+3. Perform ToH using Wilcoxon Test 
+from scipy.stats import norm, wilcoxon 
+ 
+def input_data(n=None, dtype=float): 
+    data = [] 
+    i = 0 
+    while True: 
+        if i==n: return data 
+        inp = input(f'Enter element {i+1}: ') 
+        if not inp and n is None: return data 
+        data.append(dtype(inp)) 
+        i += 1 
+ 
+def signedranktest(data1, data2, alternative='two-sided'): 
+    #calculate the differences between corresponding elements 
+    # filters out 0 differences 
+    # d is a list of tuples, each tuple contains the absolute value of difference & its sign 
+    d = [(mag:=abs(di), di/mag) for elem1, elem2  
+            in zip(data1, data2, strict=True) if (di:=elem1-elem2)!=0] 
+ 
+    #list of tuples is sorted in ascending order 
+    sorted_d = sorted(d, key=lambda tup: tup[0]) + [(0, float('inf'))] 
+    #print(d) 
+     
+    Sp = Sn = 0 
+    prev = sorted_d[0][0] 
+    accum_ranks = [] 
+    accum_signs = [] 
+    for i, (mag, sign) in enumerate(sorted_d, start=1): 
+        if mag==prev: 
+            accum_ranks.append(i) 
+            accum_signs.append(sign) 
+        else: 
+            rank = sum(accum_ranks)/len(accum_ranks) 
+            for k in accum_signs: 
+                if k==1: Sp += rank 
+                else: Sn += rank 
+            accum_ranks = [i] 
+            accum_signs = [sign] 
+        prev = mag 
+    print(Sp, Sn) 
+    m = len(d) 
+    dist = norm(m*(m+1)/4, (m*(m+1)*(2*m+1)/24)**(1/2)) 
+    if alternative=='two-sided': 
+        return (W:=min(Sn, Sp)), 2*dist.cdf(W), m 
+    elif alternative=='greater': 
+        return Sn, dist.cdf(Sn), m 
+    elif alternative=='less': 
+        return Sp, dist.cdf(Sp), m 
+    else: 
+        raise ValueError("alternative must be 'less', 'greater' or 'two-sided'") 
+ 
+ 
+print('Sample 1:') 
+data1 = input_data() 
+print('Sample 2:') 
+data2 = input_data(len(data1)) 
+alt = alt if (alt:=input('Enter the type of test: ')) else 'two-sided' 
+alpha = float(input('Enter the value of alpha:'))  
+   
+results = signedranktest(data1, data2, alternative=alt) 
+print(results) 
+results = wilcoxon(data1, data2, alternative=alt, method='approx') 
+print(results) 
+ 
+p_value = results[1]  
+ 
+if p_value < alpha:  
+ print("H0 is rejected")  
+else: 
+ print("H0 is accepted")
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

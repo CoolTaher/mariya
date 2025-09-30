@@ -1,0 +1,101 @@
+Practical 10
+
+Friedman_direct_ToH.py ------------
+
+'''Here is a group of six different rats with their swim speeds on different days as a result of a change in the water temperature.
+The question is whether or not changing the water temperature in the maze affects the swimming speed.'''
+
+
+
+from scipy import stats
+from scipy.stats import friedmanchisquare
+
+# Defining data groups
+White = [10,8,7,9,7,4,5,6,5,10,4,7]
+Red = [7,5,8,6,5,7,9,6,4,6,7,3]
+Rose = [8,5,6,4,7,5,3,7,6,4,4,3]
+
+# Conduct the Friedman Test 
+result = friedmanchisquare(White, Red, Rose)
+ 
+# Print the result
+print(result)
+
+print("p-value:", result[1])
+p_value = result[1] 
+if p_value < 0.05: 
+	print("H0 is rejected") 
+else:
+	print("H0 is accepted") 
+	 
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Kruskalwallis_direct_ToH.py-------------
+
+'''A company wants to know if three groups of workers have different salaries. 
+To test the claim, salaries of 15 workers, 5 from each group were recorded and are as follows:
+Women: 23K, 41K, 54K, 66K, 78K
+Men: 45K, 55K, 60K, 70K, 72K
+Minorities: 20K, 30K, 34K, 40K, 44K
+Test/Compare using Kruskal Wallis test.'''
+
+
+from scipy import stats
+from scipy.stats import kruskal
+
+# Defining data groups
+Northeast = [8,6,6,3,5,11,3,8,1,6]
+Midwest = [5,4,3,9,1,4,6,3,4,7]
+South = [5,8,1,5,8,7,5,1]
+West=[2,3,6,6,5,4,3,6,5]
+ 
+# Conduct the Kruskal-Wallis Test 
+result = kruskal(Northeast, Midwest, South, West)
+ 
+# Print the result
+print(result)
+
+print("p-value:", result[1])
+p_value = result[1] 
+if p_value < 0.5: 
+	print("H0 is rejected") 
+else:
+	print("H0 is accepted") 
+
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+Mood's Median_direct_ToH.py -----------------------
+
+'''A wheat supplier is analyzing the yields of various crop methods. He randomly assigned two different wheat crop methods to a very high number of different acres of farmland and recorded the production rate (yield per acre) for each plot.
+Method 1	1	14	19	12	11	15	20	5	21	15	15	28	3	6
+Method 2	16	17	19	10	31	22	26	24	27	32	14	8	12	11
+Using Mood’s Median, assess if there is a difference between the two wheat crop methods.'''
+
+
+
+from scipy import stats
+from scipy.stats import median_test
+
+# Defining data groups
+Area_A = [17,16,13,10,19,18,16,14,15,17,18]
+Area_B = [19,15,15,17,16,12,10,19,12,13,14,15]
+Area_C = [12,16,18,13,13,15,19,20,11,13,17,18]
+Area_D =  [12,14,15,17,18,20,20,20,11,18]
+ 
+# Conduct the Mood's Median Test 
+result = median_test(Area_A, Area_B, Area_C, Area_D)
+ 
+# Print the result
+print(result)
+
+print("p-value:", result[1])
+p_value = result[1] 
+if p_value < 0.05: 
+	print("H0 is rejected") 
+else:
+	print("H0 is accepted") 
+	 
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	 
+
