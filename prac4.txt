@@ -1,0 +1,54 @@
+PRACTICAL 4 : 
+--------------------------------------------------------
+
+def calculate_ir_metrics(retrieved_docs, relevant_docs):
+    # Convert lists to sets
+    retrieved_set = set(retrieved_docs)
+    relevant_set = set(relevant_docs)
+
+    # Calculate true positives
+    true_positives = retrieved_set.intersection(relevant_set)
+    num_true_positives = len(true_positives)
+
+    # Calculate precision
+    if len(retrieved_set) == 0:
+        precision = 0
+    else:
+        precision = num_true_positives / len(retrieved_set)
+
+    # Calculate recall
+    if len(relevant_set) == 0:
+        recall = 0
+    else:
+        recall = num_true_positives / len(relevant_set)
+
+    # Calculate F1-score
+    if precision + recall == 0:
+        f1_score = 0
+    else:
+        f1_score = 2 * precision * recall / (precision + recall)
+
+    # Print results
+    print("Precision:", round(precision, 2))
+    print("Recall:", round(recall, 2))
+    print("F1 Score:", round(f1_score, 2))
+
+
+# ---- User Input Section ----
+
+# Get retrieved documents
+retrieved_input = input("Enter retrieved document IDs (space-separated): ")
+retrieved_docs = []
+for item in retrieved_input.strip().split():
+    retrieved_docs.append(int(item))
+
+# Get relevant documents
+relevant_input = input("Enter relevant document IDs (space-separated): ")
+relevant_docs = []
+for item in relevant_input.strip().split():
+    relevant_docs.append(int(item))
+
+# Call the function
+calculate_ir_metrics(retrieved_docs, relevant_docs)
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

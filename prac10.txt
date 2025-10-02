@@ -1,0 +1,123 @@
+PRACTICAL 10 : 
+--------------------------------------------------------
+
+import spacy
+
+# Load the spaCy model
+nlp = spacy.load('en_core_web_sm')
+
+# Example document corpus
+documents = [
+    "Apple Inc. was founded by Steve Jobs, Steve Wozniak, and Ronald Wayne in 1976.",
+    "The capital of France is Paris.",
+    "Python is a programming language created by Guido van Rossum."
+]
+
+# Step 1: Extract information from documents (entities and sentences)
+knowledge_base = []
+
+for doc_text in documents:
+    doc = nlp(doc_text)
+    entities = [(ent.text, ent.label_) for ent in doc.ents]
+    knowledge_base.append({
+        'text': doc_text,
+        'entities': entities
+    })
+
+def answer_question(question):
+    q_doc = nlp(question)
+    q_entities = [(ent.text, ent.label_) for ent in q_doc.ents]
+
+    max_overlap = 0
+    best_doc = None
+
+    for entry in knowledge_base:
+        # Count overlapping entities
+        overlap = 0
+        for q_ent_text, q_ent_label in q_entities:
+            for doc_ent_text, doc_ent_label in entry['entities']:
+                if q_ent_text.lower() in doc_ent_text.lower() or doc_ent_text.lower() in q_ent_text.lower():
+                    overlap += 1
+
+        # Keyword overlap (excluding entities)
+        q_tokens = set([token.text.lower() for token in q_doc if not token.is_stop and not token.is_punct])
+        doc_tokens = set([token.text.lower() for token in nlp(entry['text']) if not token.is_stop and not token.is_punct])
+        keyword_overlap = len(q_tokens.intersection(doc_tokens))
+
+        total_score = overlap + keyword_overlap
+
+        if total_score > max_overlap:
+            max_overlap = total_score
+            best_doc = entry
+
+    if best_doc:
+        return best_doc['text']
+    else:
+        return "Sorry, I don't know the answer."
+
+def main():
+    print("Documents available in knowledge base:")
+    for i, doc in enumerate(documents, 1):
+        print(f"{i}. {doc}")
+    print("\nAsk a question related to the above documents (type 'exit' to quit):")
+
+    while True:
+        question = input("\nYour question: ")
+        if question.strip().lower() == 'exit':
+            print("Goodbye!")
+            break
+        answer = answer_question(question)
+        print(f"Answer: {answer}")
+
+if __name__ == "__main__":
+    main()
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+import string
+
+def summarize_text(text, num_sentences=3):
+    # Break into sentences
+    sentences = text.split('.')
+    sentences = [s.strip() for s in sentences if s.strip()]
+
+    # Word frequency
+    words = text.lower().translate(str.maketrans('', '', string.punctuation)).split()
+    stopwords = set([
+        'the', 'is', 'in', 'and', 'to', 'a', 'of', 'it', 'that', 'this',
+        'on', 'for', 'as', 'with', 'its', 'by', 'an', 'be', 'from', 'at',
+        'are', 'was', 'or', 'which', 'but', 'we', 'they', 'has', 'have'
+    ])
+
+    word_freq = {}
+    for word in words:
+        if word not in stopwords:
+            word_freq[word] = word_freq.get(word, 0) + 1
+
+    # Sentence scoring
+    sentence_scores = {}
+    for sentence in sentences:
+        sentence_words = sentence.lower().translate(str.maketrans('', '', string.punctuation)).split()
+        score = sum(word_freq.get(word, 0) for word in sentence_words)
+        sentence_scores[sentence] = score
+
+    # Top N sentences
+    ranked_sentences = sorted(sentence_scores, key=sentence_scores.get, reverse=True)
+    summary = '. '.join(ranked_sentences[:num_sentences])
+    return summary + '.'
+
+# === Main Program ===
+if __name__ == "__main__":
+    text = input("Enter the paragraph to summarize:\n")
+    try:
+        num_sentences = int(input("How many sentences should the summary contain? "))
+    except ValueError:
+        print("Invalid input. Defaulting to 3 sentences.")
+        num_sentences = 3
+
+    summary = summarize_text(text, num_sentences)
+    print("\n--- Summary ---")
+    print(summary)
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+

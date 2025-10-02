@@ -1,0 +1,118 @@
+PRACTICAL 3 : 
+--------------------------------------------------------
+def edit_distance(a, b):
+    m, n = len(a), len(b)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+
+    for i in range(m + 1):
+        dp[i][0] = i
+    for j in range(n + 1):
+        dp[0][j] = j
+
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if a[i - 1] == b[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            else:
+                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+
+    return dp[m][n]
+
+def read_words(file):
+    import string
+    with open(file, encoding='utf-8') as f:
+        text = f.read().lower()
+    return text.translate(str.maketrans('', '', string.punctuation)).split()
+
+def find_closest(word, vocab):
+    best_word, best_dist = None, float('inf')
+    for w in vocab:
+        dist = edit_distance(word, w)
+        if dist < best_dist:
+            best_word, best_dist = w, dist
+    return best_word, best_dist
+
+def main():
+    file1 = input("First file path: ").strip()
+    file2 = input("Second file path: ").strip()
+
+    words1 = read_words(file1)
+    vocab2 = set(read_words(file2))
+
+    similar_words = set()
+
+    for w in words1:
+        c, d = find_closest(w, vocab2)
+        if d <= 1:
+            similar_words.add(w)
+
+    print("\nList of similar words (edit distance ≤ 1) found in both documents:")
+    for word in sorted(similar_words):
+        print(word)
+
+if __name__ == "__main__":
+    main()
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def print_matrix(matrix, str1, str2):
+    """Helper function to print the edit distance matrix"""
+    print("\nFinal Edit Distance Matrix:")
+    # Print header row
+    print("     ", end="")
+    for j in range(len(str2) + 1):
+        print(f"  {str2[j-1] if j>0 else ' ':3}", end="")
+    print()
+    
+    for i in range(len(matrix)):
+        # Print row header
+        print(f"  {str1[i-1] if i>0 else ' '}", end="")
+        # Print matrix values
+        for j in range(len(matrix[i])):
+            print(f"{matrix[i][j]:5}", end="")
+        print()
+    print()
+
+def edit_distance(str1, str2):
+    """Calculate edit distance between two strings"""
+    m = len(str1)
+    n = len(str2)
+    
+    # Create a (m+1) x (n+1) matrix initialized with zeros
+    dp = [[0 for _ in range(n + 1)] for _ in range(m + 1)]
+    
+    # Initialize base cases
+    for i in range(m + 1):
+        dp[i][0] = i
+    for j in range(n + 1):
+        dp[0][j] = j
+    
+    # Fill the matrix
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if str1[i-1] == str2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = 1 + min(
+                    dp[i-1][j],    # Deletion
+                    dp[i][j-1],    # Insertion
+                    dp[i-1][j-1]   # Substitution
+                )
+    
+    print_matrix(dp, str1, str2)
+    return dp[m][n]
+
+def main():
+    print("Spelling Correction Module using Edit Distance Algorithm\n")
+    str1 = input("Enter first string: ").strip()
+    str2 = input("Enter second string: ").strip()
+    
+    distance = edit_distance(str1, str2)
+    
+    print("\nFinal Result:")
+    print(f"The edit distance between '{str1}' and '{str2}' is {distance}")
+
+if __name__ == "__main__":
+    main()
+
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
