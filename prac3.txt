@@ -1,0 +1,20 @@
+Practical No 3A
+Aim: Linux Network Analysis and ARP poisoning
+
+Command 1:Tracert www.google.com.
+
+Explaination : Traces the route taken by packets to reach a destination host.
+Displays a list of all intermediate routers (hops) between your system and Google, each showing its IP address or domain and the round-trip time (RTT) in milliseconds for 3 attempts. Helps identify where delays or connection issues occur.
+
+
+Command  2: ping
+Explaination : Checks if the target host is reachable and measures response time.
+Shows reply messages from Google’s IP address, time in milliseconds for each packet (latency), and packet loss statistics. At the end, it summarizes minimum, maximum, and average response times.
+
+Command 3 : netstat www.google.com.
+Explaination : Displays current network connections, routing tables, and port usage.
+Lists all active connections including local and remote IP addresses, ports, and connection state (e.g., ESTABLISHED, LISTENING). Helps monitor open ports and active sessions.
+
+Command 4: ipconfig www.google.com
+Explaination : Shows the IP address and network configuration of your computer.
+Displays IPv4 address, subnet mask, and default gateway of all active network interfaces. Also includes DNS and DHCP details for troubleshooting network issues.

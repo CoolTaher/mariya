@@ -1,0 +1,33 @@
+Practical No 4 
+Aim : Use NMAP to perform port scanning of various forms-ACK, SYN, FIN,NULL,XMAS
+ 
+Steps: 
+(1) Install NMAP. After Installation open command prompt and type "NMAP" to check whether 
+NMAP has been properly installed or not. 
+
+(2) ACK -sA(TCP ACK scan) 
+it never determines open ports. it is used to map out firewall rulesets, determining whether they 
+are stateful or not and which ports are filtered. 
+command: nmap -sA -T4 scanme.nmap.org
+
+(3) SYN(Stealth)Scan(-sS) 
+SYN scan is the default and the most popular scan option for good reason. it can be performed 
+quickly, scanning thousands of ports per second on a fast network not hampered by intrusive 
+firewalls. 
+command: nmap -p22,113,139 scanme.nmap.org 
+
+(4) FIN Scan(-sF) 
+sets just the TCP FIN bit. 
+Command: nmap -sF -T4 para 192.168.1.27
+
+(5) NULL Scan(-sN) 
+Does not sets any bits(TCP flag header is 0) 
+command: nmap -sN -p 22 scanme.nmap.org
+
+(6) XMAS Scan(-sX) 
+Sets the FIN, PSH, AND URG FLAGS, lighting the packet up like a Christmas tree
+Command: nmap -sX -T4 scanme.nmap.org
+
+
+
+

